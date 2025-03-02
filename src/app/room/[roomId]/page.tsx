@@ -15,6 +15,7 @@ const Chat = () => {
   const [userList, setUserList] = useState<User[]>([]);
   const [usersTypingIds, setUsersTypingIds] = useState<string[]>([]);
   const [usersTyping, setUsersTyping] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const messagesEndRef = useRef(null);
   const clientRef = useRef<TelepartyClient>(null);
   const router = useRouter();
@@ -30,6 +31,7 @@ const Chat = () => {
         const name = sessionStorage.getItem("teleparty-nickname") || "";
         setNickname(name);
         clientRef.current?.joinChatRoom(name, roomId, "userIcon");
+        setIsLoading(false);
       },
       onClose: () => { console.log("Socket has been closed") },
       onMessage: (message) => {
@@ -108,6 +110,13 @@ const Chat = () => {
     setMessageInput(e.target.value);
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-96">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-96">
@@ -137,10 +146,18 @@ const Chat = () => {
                 : 'bg-gray-300 text-gray-800'
                 }`}
             >
-              <div className="text-xs font-semibold mb-1">{msg.userNickname}</div>
-              <p>{msg.body}</p>
+              {!msg.isSystemMessage && <div className="text-xs font-semibold mb-1">{msg.userNickname}</div>}
+              <p>{msg.isSystemMessage ? (
+                <>
+                  <span className='font-bold'>{msg.userNickname} </span>
+                  <span>{msg.body}</span>
+                </>
+              ) : msg.body}</p>
               <div className="text-xs text-right mt-1 opacity-75">
-                {/* {formatTime(msg.timestamp)} */}
+                {new Date(msg.timestamp).toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "numeric"
+                })}
               </div>
             </div>
           </div>
