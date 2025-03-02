@@ -2,7 +2,7 @@
 
 import { IMessage, User } from '@/types/message.type';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, Suspense, useEffect, useRef, useState } from 'react';
 import { TelepartyClient, SocketEventHandler, SocketMessageTypes } from 'teleparty-websocket-lib';
 
 const Chat = () => {
@@ -196,4 +196,12 @@ const Chat = () => {
   )
 }
 
-export default Chat;
+const ChatSuspense = () => {
+  return (
+    <Suspense>
+      <Chat />
+    </Suspense>
+  );
+}
+
+export default ChatSuspense;
