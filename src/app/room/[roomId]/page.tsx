@@ -17,7 +17,7 @@ const Chat = () => {
   const [usersTyping, setUsersTyping] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState("");
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const clientRef = useRef<TelepartyClient>(null);
   const router = useRouter();
 
@@ -43,7 +43,7 @@ const Chat = () => {
             setMessages(prevMessages => [...prevMessages, data]);
             break;
           case "userList":
-            const users = data.map((user) => ({
+            const users = data.map((user: { socketConnectionId: string, userSettings: { userNickname: string, userIcon: string } }) => ({
               userId: user.socketConnectionId,
               userNickname: user.userSettings.userNickname,
               userIcon: user.userSettings.userIcon
@@ -88,7 +88,7 @@ const Chat = () => {
     router.replace("/");
   }
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const message = messageInput.trim();
