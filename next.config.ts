@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   assetPrefix: isProd ? '/teleparty-frontend/' : '',
   basePath: isProd ? '/teleparty-frontend' : '',
-  output: 'standalone'
+  output: 'export'
 };
 
 export default nextConfig;
