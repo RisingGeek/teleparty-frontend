@@ -3,8 +3,8 @@
 import { IMessage, User } from '@/types/message.type';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { TelepartyClient, SocketEventHandler, SocketMessageTypes, SessionChatMessage } from 'teleparty-websocket-lib';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { TelepartyClient, SocketEventHandler, SocketMessageTypes } from 'teleparty-websocket-lib';
 
 const Chat = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -16,6 +16,7 @@ const Chat = () => {
   const [usersTypingIds, setUsersTypingIds] = useState<string[]>([]);
   const [usersTyping, setUsersTyping] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState("");
   const messagesEndRef = useRef(null);
   const clientRef = useRef<TelepartyClient>(null);
   const router = useRouter();
@@ -53,6 +54,9 @@ const Chat = () => {
           case SocketMessageTypes.SET_TYPING_PRESENCE:
             setUsersTypingIds(data.usersTyping);
             break;
+          case "userId":
+            setUserId(data.userId);
+            break;
         }
       }
     };
@@ -74,9 +78,9 @@ const Chat = () => {
   }, [isTyping]);
 
   useEffect(() => {
-    const userNames = usersTypingIds.map((typingUserId: string) => userList.find((user) => user.userId === typingUserId)?.userNickname || "");
+    const userNames = usersTypingIds.filter((id: string) => id !== userId).map((typingUserId: string) => userList.find((user) => user.userId === typingUserId)?.userNickname || "");
     setUsersTyping(userNames)
-  }, [usersTypingIds, userList])
+  }, [usersTypingIds, userList, userId])
 
 
   const onLeaveRoom = () => {

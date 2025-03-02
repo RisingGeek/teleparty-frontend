@@ -11,13 +11,16 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
   const { handleBackClick } = props;
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const clientRef = useRef<TelepartyClient>(null);
 
 
   useEffect(() => {
     const eventHandler: SocketEventHandler = {
-      onConnectionReady: () => { console.log("connection ready") },
+      onConnectionReady: () => {
+        setIsLoading(false);
+      },
       onClose: () => { console.log("Socket has been closed") },
       onMessage: (message) => { console.log("message", message)}
     };
@@ -42,6 +45,14 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
 
     setError('');
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-96">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">

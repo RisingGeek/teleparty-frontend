@@ -8,7 +8,6 @@ const JoinChatRoom = (props: IJoinChatRoomProps) => {
   const {handleBackClick} = props;
   const [nickname, setNickname] = useState<string>('');
   const [roomId, setRoomId] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const router = useRouter();
 
   const handleJoinRoom = () => {
@@ -19,7 +18,6 @@ const JoinChatRoom = (props: IJoinChatRoomProps) => {
   return (
     <div className="p-6">
       <h2 className="text-lg text-black font-semibold mb-4">Join a Chat Room</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Your Nickname</label>
