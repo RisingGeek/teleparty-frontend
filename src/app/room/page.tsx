@@ -31,7 +31,7 @@ const Chat = () => {
       onConnectionReady: () => {
         const name = sessionStorage.getItem("teleparty-nickname") || "";
         setNickname(name);
-        clientRef.current?.joinChatRoom(name, roomId, "userIcon");
+        clientRef.current?.joinChatRoom(name, roomId || "", "userIcon");
         setIsLoading(false);
       },
       onClose: () => { console.log("Socket has been closed") },
