@@ -27,7 +27,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex flex-col min-h-screen bg-gray-100 p-4">
+          <div className="max-w-md w-full mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-blue-600 text-white p-4">
+              <h1 className="text-xl font-bold">Teleparty Chat</h1>
+            </div>
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );
