@@ -25,6 +25,30 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/room": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/room",
+      "dataRoute": "/room.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/favicon.ico": {
       "initialHeaders": {
         "cache-control": "public, max-age=0, must-revalidate",
@@ -58,8 +82,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "767a2f065a37aee0149a62114d94147a",
-    "previewModeSigningKey": "740cf46abcff125ddd00a2964326e152029f3a04e889d0fcc75dd2e9b0020628",
-    "previewModeEncryptionKey": "6cb8bbc716bcb90ac511ac5288f077363ef8d8a23bd327c6df3903d2667124fe"
+    "previewModeId": "b4ac134b8c14c49511d7f1f0251d0eb3",
+    "previewModeSigningKey": "ec1736780fa9894c8967aa58e95126503433ff53aa3da36837c1faba34125abb",
+    "previewModeEncryptionKey": "0938c93f7c199bd5f75bf825d7bfacd29e93f4fb3d251651f30f43c05ebc136d"
   }
 }

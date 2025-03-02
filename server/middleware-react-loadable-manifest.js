@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST='{"app/page.tsx -> @/components/CreateChatRoom":{"id":4632,"files":["static/chunks/632.c7dc28ee90640335.js"]}}';
+self.__REACT_LOADABLE_MANIFEST='{"app/page.tsx -> @/components/CreateChatRoom":{"id":4632,"files":["static/chunks/632.735e59f34fca3b4e.js"]}}';

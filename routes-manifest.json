@@ -21,16 +21,7 @@
     }
   ],
   "headers": [],
-  "dynamicRoutes": [
-    {
-      "page": "/room/[roomId]",
-      "regex": "^/room/([^/]+?)(?:/)?$",
-      "routeKeys": {
-        "nxtProomId": "nxtProomId"
-      },
-      "namedRegex": "^/room/(?<nxtProomId>[^/]+?)(?:/)?$"
-    }
-  ],
+  "dynamicRoutes": [],
   "staticRoutes": [
     {
       "page": "/",
@@ -49,6 +40,12 @@
       "regex": "^/favicon\\.ico(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/room",
+      "regex": "^/room(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/room(?:/)?$"
     }
   ],
   "dataRoutes": [],
