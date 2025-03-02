@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useState } from 'react'
 
 interface IJoinChatRoomProps {
@@ -8,9 +9,11 @@ const JoinChatRoom = (props: IJoinChatRoomProps) => {
   const [nickname, setNickname] = useState<string>('');
   const [roomId, setRoomId] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const router = useRouter();
 
   const handleJoinRoom = () => {
-
+    sessionStorage.setItem("teleparty-nickname", nickname)
+    router.push(`/room/${roomId}`)
   }
   
   return (
@@ -40,12 +43,12 @@ const JoinChatRoom = (props: IJoinChatRoomProps) => {
         </div>
         <button
           onClick={handleJoinRoom}
-          className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition"
+          className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition cursor-pointer"
         >
           Join Room
         </button>
         <button
-          className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition"
+          className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition cursor-pointer"
           onClick={handleBackClick}
         >
           Back

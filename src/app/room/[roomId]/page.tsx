@@ -2,6 +2,7 @@
 
 import { IMessage } from '@/types/message.type';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { TelepartyClient, SocketEventHandler, SocketMessageTypes, SessionChatMessage } from 'teleparty-websocket-lib';
 
@@ -12,6 +13,7 @@ const Chat = () => {
   const [nickname, setNickname] = useState("");
   const messagesEndRef = useRef(null);
   const clientRef = useRef<TelepartyClient>(null);
+  const router = useRouter();
 
   // Scroll to bottom when message is received
   useEffect(() => {
@@ -48,6 +50,7 @@ const Chat = () => {
 
   const onLeaveRoom = () => {
     clientRef.current?.teardown();
+    router.replace("/");
   }
 
   const handleSendMessage = (e) => {

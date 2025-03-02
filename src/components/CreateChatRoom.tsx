@@ -16,18 +16,16 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
 
 
   useEffect(() => {
-    console.log("mount")
     const eventHandler: SocketEventHandler = {
       onConnectionReady: () => { console.log("connection ready") },
       onClose: () => { console.log("Socket has been closed") },
-      onMessage: (message) => { console.log("message")}
+      onMessage: (message) => { console.log("message", message)}
     };
 
     const client = new TelepartyClient(eventHandler);
     clientRef.current = client;
 
     return () => {
-      console.log("here")
       clientRef.current?.teardown();
     }
   }, []);
