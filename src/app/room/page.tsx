@@ -1,13 +1,13 @@
 "use client";
 
 import { IMessage, User } from '@/types/message.type';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { TelepartyClient, SocketEventHandler, SocketMessageTypes } from 'teleparty-websocket-lib';
 
 const Chat = () => {
-  const { roomId } = useParams<{ roomId: string }>();
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get("roomId");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [nickname, setNickname] = useState("");

@@ -12,7 +12,7 @@ const JoinChatRoom = (props: IJoinChatRoomProps) => {
 
   const handleJoinRoom = () => {
     sessionStorage.setItem("teleparty-nickname", nickname)
-    router.push(`/room/${roomId}`)
+    router.push(`/room?roomId=${roomId}`)
   }
   
   return (

@@ -41,7 +41,7 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
 
     sessionStorage.setItem("teleparty-nickname", nickname)
     const roomId = await clientRef.current?.createChatRoom(nickname, "userIon");
-    router.push(`/room/${roomId}`)
+    router.push(`/room?roomId=${roomId}`)
 
     setError('');
   };
