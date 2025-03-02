@@ -6,3 +6,9 @@ export interface IMessage {
   permId: string;
   timestamp: number;
 }
+
+export interface User {
+  userId: string;
+  userNickname: string;
+  userIcon?: string;
+}

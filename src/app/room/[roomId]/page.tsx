@@ -1,6 +1,6 @@
 "use client";
 
-import { IMessage } from '@/types/message.type';
+import { IMessage, User } from '@/types/message.type';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
@@ -11,6 +11,10 @@ const Chat = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [nickname, setNickname] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [userList, setUserList] = useState<User[]>([]);
+  const [usersTypingIds, setUsersTypingIds] = useState<string[]>([]);
+  const [usersTyping, setUsersTyping] = useState<string[]>([]);
   const messagesEndRef = useRef(null);
   const clientRef = useRef<TelepartyClient>(null);
   const router = useRouter();
@@ -35,6 +39,18 @@ const Chat = () => {
           case SocketMessageTypes.SEND_MESSAGE:
             setMessages(prevMessages => [...prevMessages, data]);
             break;
+          case "userList":
+            const users = data.map((user) => ({
+              userId: user.socketConnectionId,
+              userNickname: user.userSettings.userNickname,
+              userIcon: user.userSettings.userIcon
+            }))
+            console.log("users", users, data)
+            setUserList(users);
+            break;
+          case SocketMessageTypes.SET_TYPING_PRESENCE:
+            setUsersTypingIds(data.usersTyping);
+            break;
         }
       }
     };
@@ -48,6 +64,19 @@ const Chat = () => {
   }, [roomId]);
 
 
+  useEffect(() => {
+    console.log("type", isTyping)
+    clientRef.current?.sendMessage(SocketMessageTypes.SET_TYPING_PRESENCE, {
+      typing: isTyping
+    })
+  }, [isTyping]);
+
+  useEffect(() => {
+    const userNames = usersTypingIds.map((typingUserId: string) => userList.find((user) => user.userId === typingUserId)?.userNickname || "");
+    setUsersTyping(userNames)
+  }, [usersTypingIds, userList])
+
+
   const onLeaveRoom = () => {
     clientRef.current?.teardown();
     router.replace("/");
@@ -59,6 +88,8 @@ const Chat = () => {
     const message = messageInput.trim();
     if (!message) return;
 
+    setIsTyping(false);
+
     clientRef.current?.sendMessage(SocketMessageTypes.SEND_MESSAGE, {
       body: message
     });
@@ -66,6 +97,14 @@ const Chat = () => {
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!isTyping) {
+      setIsTyping(true);
+
+      // Timeout for stop typing indicator after 3 secs of inactivity
+      setTimeout(() => {
+        setIsTyping(false);
+      }, 3000)
+    }
     setMessageInput(e.target.value);
   }
 
@@ -109,6 +148,12 @@ const Chat = () => {
         <div ref={messagesEndRef} />
       </div>
 
+
+      {usersTyping.length > 0 && (
+        <div className="text-sm text-gray-500 italic mb-2 pl-4">
+          {usersTyping.length === 1 ? `${usersTyping[0]} is typing...` : `${Array.from(usersTyping).join(", ")} are typing...`}
+        </div>
+      )}
       <div className="p-4 border-t">
         <div className="flex space-x-2">
           <input
