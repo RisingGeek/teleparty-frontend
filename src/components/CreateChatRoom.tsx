@@ -1,9 +1,12 @@
 "use client";
 
-import Link from 'next/link';
-import React, { ChangeEvent, FC, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 
-const CreateChatRoom: FC = () => {
+interface ICreateChatRoomProps {
+  handleBackClick: () => void;
+}
+const CreateChatRoom = (props: ICreateChatRoomProps) => {
+  const {handleBackClick} = props;
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -37,12 +40,12 @@ const CreateChatRoom: FC = () => {
         >
           Create Room
         </button>
-        <Link
-          href="/"
-          className="flex justify-center bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition"
+        <button
+          className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition"
+          onClick={handleBackClick}
         >
           Back
-        </Link>
+        </button>
       </div>
     </div>
   )
