@@ -1,5 +1,6 @@
 "use client";
 
+import { useNotification } from '@/components/notification/NotificationContext';
 import { IMessage, User } from '@/types/message.type';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { ChangeEvent, Suspense, useEffect, useRef, useState } from 'react';
@@ -17,6 +18,9 @@ const Chat = () => {
   const [usersTyping, setUsersTyping] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [notification, contextHolder, setContainer] = useNotification();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const clientRef = useRef<TelepartyClient>(null);
   const router = useRouter();
@@ -25,6 +29,12 @@ const Chat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isLoading && containerRef.current) {
+      setContainer(containerRef.current);
+    }
+  }, [isLoading, setContainer]);
 
   useEffect(() => {
     const eventHandler: SocketEventHandler = {
@@ -51,7 +61,14 @@ const Chat = () => {
           if (err instanceof Error) {
             // Handle wrong roomId
             if (err.message.includes("Invalid session id")) {
-              router.push("/");
+              console.log("wrong chat room")
+              notification.error({
+                message: 'Room ID does not exist',
+                description: 'Please Check the room ID and try again.',
+              });
+              setTimeout(() => {
+                router.push("/");
+              }, 2000);
             }
           } else {
             console.error("Unknown error occured", err);
@@ -163,6 +180,9 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col h-96">
+      <div className="absolute inset-0 overflow-y-auto p-4" ref={containerRef}>
+        {contextHolder}
+      </div>
       <div className="p-4 bg-gray-100 border-b">
         <div className="flex justify-between items-center">
           <div>

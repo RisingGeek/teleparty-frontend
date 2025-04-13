@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { NotificationProvider } from "@/components/notification/NotificationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,9 @@ export default function RootLayout({
             <div className="bg-blue-600 text-white p-4">
               <h1 className="text-xl font-bold">Teleparty Chat</h1>
             </div>
+            <NotificationProvider>
             {children}
+            </NotificationProvider>
           </div>
         </div>
       </body>
