@@ -22,7 +22,7 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
         setIsLoading(false);
       },
       onClose: () => { console.log("Socket has been closed") },
-      onMessage: (message) => { console.log("message", message)}
+      onMessage: (message) => { console.log("message", message) }
     };
 
     const client = new TelepartyClient(eventHandler);
@@ -46,6 +46,14 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
     setError('');
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // create room on keyboard enter but not shift + enter
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleCreateRoom();
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center h-96">
@@ -67,6 +75,7 @@ const CreateChatRoom = (props: ICreateChatRoomProps) => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setNickname(e.target.value)}
             className="w-full p-2 border text-black border-gray-300 rounded"
             placeholder="Enter your nickname"
+            onKeyDown={handleKeyDown}
           />
         </div>
         <button
