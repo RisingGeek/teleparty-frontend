@@ -180,9 +180,6 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col h-96">
-      <div className="absolute inset-0 overflow-y-auto p-4" ref={containerRef}>
-        {contextHolder}
-      </div>
       <div className="p-4 bg-gray-100 border-b">
         <div className="flex justify-between items-center">
           <div>
@@ -198,7 +195,10 @@ const Chat = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 relative">
+        <div className="absolute inset-0 overflow-y-auto p-4" ref={containerRef}>
+          {contextHolder}
+        </div>
         {messages.map((msg, index) => (
           <div
             key={index}
