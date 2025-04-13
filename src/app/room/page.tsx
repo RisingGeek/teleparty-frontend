@@ -19,6 +19,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMountedRef = useRef(true);
   const [notification, contextHolder, setContainer] = useNotification();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -77,6 +78,12 @@ const Chat = () => {
         setIsLoading(false);
       },
       onClose: () => {
+        // Close event listener should not be called after component unmount
+        if (!isMountedRef.current) {
+          return;
+        }
+
+        // Reconnect Socket 
         console.log("Socket has been closed");
         notification.info({
           message: "Connection Lost, Reconnecting...",
@@ -117,6 +124,7 @@ const Chat = () => {
     clientRef.current = client;
 
     return () => {
+      isMountedRef.current = false;
       clientRef.current?.teardown();
     }
   }, [roomId]);
