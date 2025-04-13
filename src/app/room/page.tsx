@@ -64,7 +64,7 @@ const Chat = () => {
               console.log("wrong chat room")
               notification.error({
                 message: 'Room ID does not exist',
-                description: 'Please Check the room ID and try again.',
+                description: 'Going back to homepage in 2 secs',
               });
               setTimeout(() => {
                 router.push("/");
