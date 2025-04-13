@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   assetPrefix: isProd ? '/teleparty-frontend/' : '',
   basePath: isProd ? '/teleparty-frontend' : '',
   output: 'export',
-  reactStrictMode: false,
+  // reactStrictMode: false,
 };
 
 export default nextConfig;
