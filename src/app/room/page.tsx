@@ -77,7 +77,11 @@ const Chat = () => {
         setIsLoading(false);
       },
       onClose: () => {
-        console.log("Socket has been closed")
+        console.log("Socket has been closed");
+        notification.info({
+          message: "Connection Lost, Reconnecting...",
+          description: "Connection has been lost. Please wait for reconnection"
+        })
         const client = new TelepartyClient(eventHandler);
         clientRef.current = client;
       },
