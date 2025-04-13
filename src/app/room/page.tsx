@@ -28,13 +28,42 @@ const Chat = () => {
 
   useEffect(() => {
     const eventHandler: SocketEventHandler = {
-      onConnectionReady: () => {
+      onConnectionReady: async () => {
         const name = sessionStorage.getItem("teleparty-nickname") || "";
         setNickname(name);
-        clientRef.current?.joinChatRoom(name, roomId || "", "userIcon");
+        try {
+          const data = await clientRef.current?.joinChatRoom(name, roomId || "", "userIcon");
+          const previousMessages = data?.messages.map((msg) => {
+            const message: IMessage = {
+              isSystemMessage: msg.isSystemMessage,
+              userIcon: msg.userIcon,
+              userNickname: msg.userNickname,
+              body: msg.body,
+              permId: msg.permId,
+              timestamp: msg.timestamp,
+            }
+            return message;
+          });
+          if (previousMessages) {
+            setMessages(previousMessages);
+          }
+        } catch (err) {
+          if (err instanceof Error) {
+            // Handle wrong roomId
+            if (err.message.includes("Invalid session id")) {
+              router.push("/");
+            }
+          } else {
+            console.error("Unknown error occured", err);
+          }
+        }
         setIsLoading(false);
       },
-      onClose: () => { console.log("Socket has been closed") },
+      onClose: () => {
+        console.log("Socket has been closed")
+        const client = new TelepartyClient(eventHandler);
+        clientRef.current = client;
+      },
       onMessage: (message) => {
         const { type, data } = message;
         console.log("message", message)
@@ -55,6 +84,7 @@ const Chat = () => {
             setUsersTypingIds(data.usersTyping);
             break;
           case "userId":
+            console.log("user id", data.userId)
             setUserId(data.userId);
             break;
         }
@@ -62,6 +92,7 @@ const Chat = () => {
     };
 
     const client = new TelepartyClient(eventHandler);
+    console.log("client", client)
     clientRef.current = client;
 
     return () => {
@@ -88,8 +119,8 @@ const Chat = () => {
     router.replace("/");
   }
 
-  const handleSendMessage = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleSendMessage = (event?: React.MouseEvent<HTMLButtonElement>) => {
+    event?.preventDefault();
 
     const message = messageInput.trim();
     if (!message) return;
@@ -102,7 +133,7 @@ const Chat = () => {
     setMessageInput('');
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (!isTyping) {
       setIsTyping(true);
 
@@ -112,6 +143,14 @@ const Chat = () => {
       }, 3000)
     }
     setMessageInput(e.target.value);
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Send message on keyboard enter but not shift + enter
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   }
 
   if (isLoading) {
@@ -177,12 +216,13 @@ const Chat = () => {
       )}
       <div className="p-4 border-t">
         <div className="flex space-x-2">
-          <input
-            type="text"
+          <textarea
             value={messageInput}
             onChange={handleInputChange}
             className="flex-1 p-2 border rounded text-black"
             placeholder="Type a message..."
+            onKeyDown={handleKeyDown}
+            rows={1}
           />
           <button
             onClick={handleSendMessage}

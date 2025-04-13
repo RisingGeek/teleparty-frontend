@@ -1,7 +1,7 @@
 export interface IMessage {
   isSystemMessage: boolean;
   userIcon?: string;
-  userNickname: string;
+  userNickname?: string;
   body: string;
   permId: string;
   timestamp: number;
